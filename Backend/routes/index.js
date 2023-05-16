@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { connect, getWeeks, getPopularHashtags, getRandomUsers, userTweetFrequency, timeUserHashtags, findConnectedPeople } = require('./mongoconnect.js')
+const { connect, getWeeks, getPopularHashtags, getRandomUsers, userTweetFrequency, timeUserHashtags, findConnectedPeople, findTotalLikesForConnections } = require('./mongoconnect.js')
 const object = require('./mukulmongo.js')
 
 router.get('/possibleWeeks', async (req, res)=> {
@@ -110,7 +110,26 @@ router.post('/connectedComponents', async (req, res) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   res.setHeader("Access-Control-Allow-Credentials", true);
 	const [client ,db] = await connect();
-	const result = await findConnectedPeople(userId, db)
+	// console.log(userId)
+	const result = await findConnectedPeople(parseInt(userId), db)
+	client.close();
+	// console.log(result);
+	res.send({status: "ok", data: result});
+	}
+	catch(error) {
+		res.send({status: "error"});
+	}
+})
+
+router.post('/totalLikes', async (req, res) => {
+	try {
+		res.header("Access-Control-Allow-Origin", "*");
+  		res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  		res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  		res.setHeader("Access-Control-Allow-Credentials", true);
+		const { userId } = req.body
+	const [client ,db] = await connect();
+	const result = await findTotalLikesForConnections(parseInt(userId), db)
 	client.close();
 	res.send({status: "ok", data: result});
 	}

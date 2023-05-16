@@ -8,10 +8,24 @@ var data_updated = []
 export default class Table extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            tableActive: false
+        }
     }
 
     componentDidMount() {
+        try {
+        var a = document.getElementById("tables");
+        a.remove();
+        }
+        catch(error) {
+            ;
+        }
+        this.setState({ tableActive: true })
         keys = Object.keys(this.props.data[0]);
+        headers = []
+        csvReport = []
+        data_updated = []
         for(var i=0;i<this.props.column_info.length;i++) {
             headers.push(this.props.column_info[i])
         }
@@ -32,9 +46,9 @@ export default class Table extends Component {
 
   render() {
     return (
-      <div className="tableClass" id='tableCls'>
+      <>{this.state.tableActive && <div className="tableClass" id='tableCls'>
         <CSVLink data={csvReport} download={this.props.filename}><span class="material-symbols-outlined" id='download_button'>download</span></CSVLink>
-        <table class="shadow-lg bg-white border-separate">
+        <table class="shadow-lg bg-white border-separate" id='tables'>
         <tr>
             {this.props.column_info.map((column) => {
                 return (
@@ -54,7 +68,7 @@ export default class Table extends Component {
                     )
                 })}
             </table>
-      </div>
+      </div>}</>
     )
   }
 }

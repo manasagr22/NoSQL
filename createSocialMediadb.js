@@ -1,4 +1,4 @@
-const MongoClient = require('mongodb').MongoClient;
+import { MongoClient } from "mongodb";
 
 // Connection URL
 const url = 'mongodb://127.0.0.1:27017';

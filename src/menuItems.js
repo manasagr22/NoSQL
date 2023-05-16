@@ -52,6 +52,10 @@ const menuItems = [
             {
                 title: "Connected People",
                 url: "/0111/temporal-analysis/connectedPeople"
+            },
+            {
+                title: "Total Likes",
+                url: "/0111/temporal-analysis/totalLikes"
             }
         ]
     }

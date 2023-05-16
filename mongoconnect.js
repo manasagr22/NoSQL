@@ -1,9 +1,9 @@
-const MongoClient = require('mongodb').MongoClient;
+import { MongoClient } from 'mongodb';
 const url = 'mongodb://127.0.0.1:27017';
 const database = 'twitter'
 const stopwords = ['covid', 'corona', 'pandemic']
 
-async function connect() {
+export async function connect() {
 	const client = new MongoClient(url);
 	const result = await client.connect();
 	return [client, result.db(database)];
@@ -27,7 +27,7 @@ function shuffle(array) {
   return array;
 }
 
-async function getWeeks(db) {
+export async function getWeeks(db) {
 	const covid19 = await db.collection('covid19')
 	const response = await covid19.aggregate([
 		{'$group': {'_id': {'$week': '$date'}}},
@@ -35,7 +35,7 @@ async function getWeeks(db) {
 	return response;
 }
 
-async function getRandomUsers(db) {
+export async function getRandomUsers(db) {
 	const covid19 = await db.collection('covid19');
 	const response = await covid19.aggregate([
 		{'$group': {
@@ -46,7 +46,7 @@ async function getRandomUsers(db) {
 	return shuffledArray.slice(0, 10);
 }
 
-async function getPopularHashtags(db, weekNo) {
+export async function getPopularHashtags(db, weekNo) {
 	const covid19 = await db.collection('covid19');
 	const response = covid19.aggregate([
 		{ 
@@ -88,7 +88,7 @@ async function getPopularHashtags(db, weekNo) {
 	return filteredHashArray.slice(0, 10);
 }
 
-async function userTweetFrequency(db, username) {
+export async function userTweetFrequency(db, username) {
 	const covid19 = await db.collection('covid19');
     const match = (username) ? {"$match": {
         "_id.username": username
@@ -110,7 +110,7 @@ async function userTweetFrequency(db, username) {
 	return tweetCount;
 }
 
-async function timeUserHashtags(db, username) {
+export async function timeUserHashtags(db, username) {
 	const covid19 = await db.collection('covid19');
 	const response = await covid19.aggregate([
 		{'$unwind': '$hashtags'},
@@ -126,7 +126,7 @@ async function timeUserHashtags(db, username) {
     return response
 }
 
-async function findConnectedPeople(userId, db) {
+export async function findConnectedPeople(userId, db) {
 	try {	
 		const result = await db.collection('users').aggregate([
 		{
@@ -156,7 +156,7 @@ async function findConnectedPeople(userId, db) {
 	}
 }
 
-async function findTotalLikesForConnections(userId, db) {
+export async function findTotoalLikesForConnections(userId, db) {
 	try {	
 		const result = await db.collection('users').aggregate([
 			{
@@ -200,15 +200,4 @@ async function findTotalLikesForConnections(userId, db) {
   	} catch (err) {
 	  console.error('Error finding connected components:', err);
 	}
-}
-
-module.exports = {
-    connect: connect,
-    getWeeks: getWeeks,
-    getPopularHashtags: getPopularHashtags,
-	getRandomUsers: getRandomUsers,
-	userTweetFrequency: userTweetFrequency,
-	timeUserHashtags: timeUserHashtags,
-    findConnectedPeople: findConnectedPeople,
-	findTotalLikesForConnections: findTotalLikesForConnections
 }

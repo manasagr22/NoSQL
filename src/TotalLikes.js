@@ -10,9 +10,9 @@ var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 var data = [];
-var filename = "ConnectedPeople.csv"
+var filename = "TotalLikes.csv"
 var column_info = [];
-export default class ConnectedCommponents extends Component {
+export default class TotalLikes extends Component {
     constructor(props){
         super(props);
         // this.getCountUsers = this.getCountUsers.bind(this);
@@ -34,7 +34,7 @@ export default class ConnectedCommponents extends Component {
       const userId = a;
       console.log(userId)
       let bg = document.getElementById('background').style;
-      let url = 'http://localhost:4000/api/connectedComponents'
+      let url = 'http://localhost:4000/api/totalLikes'
       bg.filter = 'blur(2px)';
       this.props.setStateData('load', true);
       const result = await fetch(url, {
@@ -55,14 +55,7 @@ export default class ConnectedCommponents extends Component {
       }
       else {
         this.props.alertFunc('success', 'Data Retrieved Successfully!!!');
-        data = []
-        for(var i=0;i<result.data[0]["connectPeople"];i++) {
-            data.push({
-                _id: result.data[0]["peopleConnected"][i]["_id"],
-                user_name: result.data[0]["peopleConnected"][i]["name"]
-            })
-        }
-        console.log(data);
+        data = result.data
         this.setState({tableActive: true});
       }
     }
@@ -102,7 +95,18 @@ export default class ConnectedCommponents extends Component {
         </div>
     </div></form>
 <button type="button" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2" id='button_Search' onClick={this.getData} style={{margin: "auto", display: "block"}}>Search</button></div>
-{this.state.tableActive ? <Table data={data} column_info={column_info} filename={filename}/> : undefined}
+{this.state.tableActive && data.map((item, index) => {
+    return (
+        <div class="max-w-sm rounded overflow-hidden shadow-lg">
+        <img class="w-full" src={avatar} alt="" id='imgId'/>
+        <div class="px-6 py-4">
+        <div class="font-bold text-xl mb-2">{"User Id: "+this.state.weekValue}</div>
+    <p class="text-gray-700 text-base">
+      {"Total Likes: "+item["totalLikes"]}
+    </p>
+  </div>
+</div>
+    )})}
         </>
     )
   }

@@ -13,6 +13,7 @@ import PostCovid from './PostCovid';
 import PopularHashtags from './PopularHashtags';
 import TweetFrequency from './TweetFrequency';
 import ConnectedCommponents from './ConnectedComponents';
+import TotalLikes from './TotalLikes';
 
 class App extends Component {
   constructor(){
@@ -115,6 +116,7 @@ class App extends Component {
           <Route exact path="/0111/temporal-analysis/PossibleWeeks" element={<PopularHashtags navigate={this.navigator} state={this.state} setStateData={this.setStateData} alertFunc={this.handleAlert}/>}></Route>
           <Route exact path="/0111/temporal-analysis/TweetFrequency" element={<TweetFrequency navigate={this.navigator} state={this.state} setStateData={this.setStateData} alertFunc={this.handleAlert}/>}></Route>
           <Route exact path="/0111/temporal-analysis/connectedPeople" element={<ConnectedCommponents navigate={this.navigator} state={this.state} setStateData={this.setStateData} alertFunc={this.handleAlert}/>}></Route>
+          <Route exact path="/0111/temporal-analysis/totalLikes" element={<TotalLikes navigate={this.navigator} state={this.state} setStateData={this.setStateData} alertFunc={this.handleAlert}/>}></Route>
         </Routes>
       </div>
     )
